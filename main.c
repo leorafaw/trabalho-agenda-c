@@ -53,7 +53,7 @@ struct Aluno* cadastrarAluno(struct Aluno* agenda) {
     int i;
     struct Aluno aluno;
     char resposta;
-
+    system("clear");
     printf ("\nDigite a matricula: ");
     fflush(stdin);
     scanf("%d", &aluno.matricula);
@@ -64,6 +64,7 @@ struct Aluno* cadastrarAluno(struct Aluno* agenda) {
     //fgets(aluno.nome, sizeof(aluno.nome), stdin);
 
     printf("\nDigite o sexo: ");
+    fflush(stdin);
     scanf("%s", &aluno.sexo);
 
     printf("\nDigite o email: ");
@@ -79,6 +80,7 @@ struct Aluno* cadastrarAluno(struct Aluno* agenda) {
         i++;
 
         printf("\nGostaria de cadastrar mais um telefone? (s para sim, qualquer outro caractere para não)");
+        fflush(stdin);
         scanf("%s", &resposta);
     } while (resposta == 's' && i < numeroTelefones);
 
@@ -91,22 +93,30 @@ struct Aluno* cadastrarAluno(struct Aluno* agenda) {
         }
     }
 
+    sleep(1);
+    system("clear");
+    printf("Cadastrado com sucesso!\n\n");
+
     return agenda;
 }
 
 struct Aluno* pesquisarAluno(struct Aluno* agenda) {
-    int matricula, opcao, i, j, telefoneDeletar;
+    int matricula, opcao, i, j, telefoneDeletar, count;
+    system("clear");
 
     printf ("Digite a matricula do aluno que deseja buscar: ");
     fflush(stdin);
     scanf("%d", &matricula);
 
+    count = 0;
+
     for(i = 0; i < tamanhoAlunos; i++) {
         if(agenda[i].matricula == matricula) {
+            count++;
             printf("Aluno encontrado: \n");
-            escreverAluno(agenda[i]);
 
             do {
+                escreverAluno(agenda[i]);
                 printf("O que deseja fazer: \n1 - Adicionar telefone\n2 - Remover telefone\n3 - Voltar para o menu\n\n");
                 fflush(stdin);
                 scanf("%d", &opcao);
@@ -120,18 +130,27 @@ struct Aluno* pesquisarAluno(struct Aluno* agenda) {
                         }
                     }
                 } else if(opcao == 2) {
-                    printf("Digite o indice do telefone a remover");
+                    printf("Digite o indice do telefone a remover: ");
                     fflush(stdin);
                     scanf("%d", &telefoneDeletar);
-                    agenda[i].telefones[telefoneDeletar + 1] = 0;
+                    agenda[i].telefones[telefoneDeletar - 1] = 0;
                 } else if(opcao == 3) {
+                    system("clear");
                     return agenda;
                 } else {
-                    system('cls');
+                    system("clear");
                     printf("Opção inválida");
                 }
-            } while(opcao != 1 || opcao != 2 || opcao != 3);
+            } while(opcao != 3);
+            system("clear");
         }
+    }
+
+    if(count == 0) {
+        printf("Nenhum aluno encontrado! Voltando para o menu...\n");
+        sleep(2);
+        system("clear");
+        return agenda;
     }
 }
 
@@ -146,30 +165,37 @@ int adicionarTelefone() {
 }
 
 void listarTodosAlunos(struct Aluno* agenda) {
+    int contAlunos = 0;
     system("clear");
     printf("Carregando...\n");
     sleep(1);
+    system("clear");
     for(int i = 0; i < tamanhoAlunos; i++) {
         if(agenda[i].matricula != 0) {
             escreverAluno(agenda[i]);
-        } else if(i == tamanhoAlunos -1 && agenda[i].matricula == 0) {
-            printf("Nenhum aluno cadastrado!\n\n");
-            sleep(2);
-            system("clear");
+            contAlunos++;
         }
+    }
+
+    if (contAlunos == 0) {
+        printf("Nenhum aluno cadastrado!\n\n");
+        sleep(2);
+        system("clear");
     }
 }
 
 void escreverAluno(struct Aluno aluno){
     int i;
 
-    printf ("Matricula: %d \nNome: %s \nEmail: %s \nSexo: %c", aluno.matricula, aluno.nome, aluno.email, aluno.sexo);
+    printf ("Matricula: %d \nNome: %s \nEmail: %s \nSexo: %c\n", aluno.matricula, aluno.nome, aluno.email, aluno.sexo);
 
-    printf("telefones: \n");
+    printf("\ntelefones:");
 
     for(i = 0; i < tamanhoAlunos; i++) {
         if(aluno.telefones[i]!=0) {
             printf ("\n%d - %d", i+1, aluno.telefones[i]);
         }
     }
+
+    printf("\n\n");
 }
