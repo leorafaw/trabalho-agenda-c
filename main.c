@@ -18,7 +18,7 @@ void escreverAluno(struct Aluno escrita);
 
 void listarTodosAlunos(struct Aluno* agenda);
 
-int adicionarTelefone(int telefones[]);
+int adicionarTelefone();
 
 void abrirMenu();
 
@@ -64,28 +64,28 @@ struct Aluno* cadastrarAluno(struct Aluno* agenda) {
     //fgets(aluno.nome, sizeof(aluno.nome), stdin);
 
     printf("\nDigite o sexo: ");
-    fflush(stdin);
-    scanf("%c", &aluno.sexo);
+    scanf("%s", &aluno.sexo);
 
     printf("\nDigite o email: ");
     fflush(stdin);
     scanf("%s", &aluno.email);
-    //fgets(aluno.email, sizeof(aluno.email), stdin);
+    // fgets(aluno.email, sizeof(aluno.email), stdin);
 
     i = 0;
 
     do {
-        aluno.telefones[i] = adicionarTelefone(aluno.telefones);
+        aluno.telefones[i] = adicionarTelefone();
 
         i++;
 
         printf("\nGostaria de cadastrar mais um telefone? (s para sim, qualquer outro caractere para não)");
-        scanf("%c", &resposta);
+        scanf("%s", &resposta);
     } while (resposta == 's' && i < numeroTelefones);
 
     for(i = 0; i < tamanhoAlunos; i++) {
         if(agenda[i].matricula == 0) {
             agenda[i] = aluno;
+            break;
         } else if(i == tamanhoAlunos -1 && agenda[i].matricula != 0) {
             printf("Não há espaço disponível, apague algum registro antes de continuar!");
         }
@@ -135,10 +135,10 @@ struct Aluno* pesquisarAluno(struct Aluno* agenda) {
     }
 }
 
-int adicionarTelefone(int telefones[]) {
+int adicionarTelefone() {
     int numeroAdicionar;
 
-    printf("Digite um numero para adicionar: ");
+    printf("\nDigite um numero para adicionar: ");
     fflush(stdin);
     scanf("%d", &numeroAdicionar);
 
